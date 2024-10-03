@@ -51,6 +51,13 @@
 	    <artifactId>tabula</artifactId>
 	    <version>1.0.4</version>
 	</dependency>
+	
+	<dependency>
+    	<groupId>org.quartz-scheduler</groupId>
+    	<artifactId>quartz</artifactId>
+    	<version>2.3.2</version>
+	</dependency>
+
 
   </dependencies>
   
