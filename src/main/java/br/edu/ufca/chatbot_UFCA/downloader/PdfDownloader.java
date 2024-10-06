@@ -20,7 +20,7 @@ import java.nio.file.StandardCopyOption;
 
 public class PdfDownloader implements Job {
 	private static final Logger logger = LogManager.getLogger(PdfDownloader.class);
-	private static final String UFCA_SITE = "https://www.ufca.edu.br/assuntos-estudantis/refeitorio-universitario/cardapios/";
+	private final String UFCA_SITE = "https://www.ufca.edu.br/assuntos-estudantis/refeitorio-universitario/cardapios/";
 	public static final String NOME_ARQUIVO = "src\\main\\resources\\arquivos\\cardapio.pdf";
 
 	public void baixarPdf(String url){
