@@ -43,7 +43,7 @@ public class Connection {
 	}
 	
 	public static void salvarUsuario(Long chatId) {
-		if(!usuarioExiste(chatId)) {
+		if(usuarioExiste(chatId)) {
 			String sql = "INSERT INTO cardapio_bot.usuario (chatId) VALUES ('%d');".formatted(chatId.longValue());
 			try (java.sql.Connection conn = createConnection()) {
 				Statement stmt = conn.createStatement();
