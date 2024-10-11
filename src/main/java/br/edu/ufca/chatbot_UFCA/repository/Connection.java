@@ -10,12 +10,11 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import br.edu.ufca.chatbot_UFCA.Main;
 
 public class Connection {
 	private final static String URL = "jdbc:postgresql://localhost:5432/cardapio_bot";
-	private final static String USER = "postgres";
-	private final static String PASSWORD = "postgres";
+	private final static String USER = "seu_usuario";
+	private final static String PASSWORD = "sua_senha";
 	
 	private static final Logger logger = LogManager.getLogger(Connection.class);
 	
@@ -29,7 +28,7 @@ public class Connection {
 		return conn;
 	}
 	
-	public static boolean usuarioExiste(Long chatId) {
+	public static boolean usuarioNaoSalvo(Long chatId) {
 		String sql = "SELECT '%d' FROM cardapio_bot.usuario;".formatted(chatId.longValue());
 		boolean existe = false;
 		try (java.sql.Connection conn = createConnection()) {
@@ -37,19 +36,19 @@ public class Connection {
 			ResultSet rset = stmt.executeQuery(sql);
 			existe = rset.equals(null);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.info("Erro de acesso ao BD, {}", e);
 		}
 		return existe;
 	}
 	
 	public static void salvarUsuario(Long chatId) {
-		if(usuarioExiste(chatId)) {
+		if(usuarioNaoSalvo(chatId)) {
 			String sql = "INSERT INTO cardapio_bot.usuario (chatId) VALUES ('%d');".formatted(chatId.longValue());
 			try (java.sql.Connection conn = createConnection()) {
 				Statement stmt = conn.createStatement();
 				stmt.executeUpdate(sql);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.info("Erro de acesso ao BD, {}", e);
 			}
 			logger.info("Usuario {} salvo", chatId);
 		}
@@ -68,7 +67,7 @@ public class Connection {
 				idUsuarios.add(result.getBigDecimal("chatId").longValue());
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.info("Erro de acesso ao BD. {}", e);
 		}
 		
 		return idUsuarios;
