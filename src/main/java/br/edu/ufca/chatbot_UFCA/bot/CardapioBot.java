@@ -7,6 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import br.edu.ufca.chatbot_UFCA.repository.Connection;
+
+
 public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 	private TelegramClient telegramClient;
 	
@@ -27,12 +30,18 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 					.text(comandoRecebido)
 					.build();
 			
+			Connection.salvarUsuario(chatId);
+			
 			try {
 				telegramClient.execute(mensagem);
 			} catch (TelegramApiException e) {
 				e.printStackTrace();
 			}
 	    }
+	}
+
+	public TelegramClient getTelegramClient() {
+		return telegramClient;
 	}
 	
 	
