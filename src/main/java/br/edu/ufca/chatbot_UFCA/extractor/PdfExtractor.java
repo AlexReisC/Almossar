@@ -3,15 +3,12 @@ package br.edu.ufca.chatbot_UFCA.extractor;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-import br.edu.ufca.chatbot_UFCA.model.Cardapio;
 import technology.tabula.*;
 import technology.tabula.extractors.SpreadsheetExtractionAlgorithm;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PdfExtractor {
 	
