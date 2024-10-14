@@ -18,11 +18,8 @@ public class Main
 		
 		JobScheduler jobScheduler = new JobScheduler();
 		try {
-			jobScheduler.deletarPdf();
-			jobScheduler.agendarDownload();
-
+			jobScheduler.agendarTarefas();
 			botsApplication.registerBot(botToken, new CardapioBot(botToken));
-			jobScheduler.agendarEnvioDiario();
 			Thread.currentThread().join();
 		} catch (SchedulerException e) {
 			logger.info("Erro ao agendar jobs na classe JobScheduler. {}", e);

@@ -6,14 +6,16 @@ import java.time.LocalTime;
 
 import br.edu.ufca.chatbot_UFCA.downloader.PdfDownloader;
 import br.edu.ufca.chatbot_UFCA.extractor.PdfExtractor;
+import br.edu.ufca.chatbot_UFCA.utils.CheckPdf;
 
 public class Comandos {
 	
 	protected static String exibirComandos(String comando) {
 		switch (comando) {
+		case "start":
 		case "/start":
-			return "JÁ PODI ALMOSSAR?\n" + 
-				"Olá! Eu sou o Al-mossar o bot do RU da UFCA! Aqui estão as opções do que posso fazer:\n" + 
+			return "JÁ PODI ALMOSSAR???\n\n" + 
+				"Olá, eu sou o Almossar o bot do RU da UFCA! Aqui estão as opções do que posso fazer:\n" + 
 				"🍽️ /cardapio - Ver o cardápio do dia\n" + 
 				"⏰ /horarios - Ver os horários que o RU está funcionando\n" + 
 				"ℹ️ /sobre - Informações sobre este projeto\n" +
@@ -49,6 +51,9 @@ public class Comandos {
 	}
 	
 	public static String obterCardapio(){
+		if(!CheckPdf.pdfExiste()) {
+			return "O cardapio ainda não foi disponibilizado, tente mais tarde.";
+		}
 		LocalDate hoje = LocalDate.now();
 		int dia = hoje.getDayOfWeek().getValue();
 		dia = 5; 

@@ -18,7 +18,7 @@ import br.edu.ufca.chatbot_UFCA.downloader.PdfDownloader;
 
 public class JobScheduler {
 
-	public void agendarDownload() throws SchedulerException {
+	public void agendarTarefas() throws SchedulerException, InterruptedException {
 		JobDetail jobDetail = JobBuilder.newJob(PdfDownloader.class).withIdentity("pdfDownloadJob", "grupo").build();
 
 		TimeOfDay inicio = TimeOfDay.hourAndMinuteOfDay(8, 0);
@@ -34,43 +34,37 @@ public class JobScheduler {
 		Scheduler scheduler;
 		scheduler = StdSchedulerFactory.getDefaultScheduler();
 		scheduler.scheduleJob(jobDetail, trigger);
-		scheduler.start();
-		scheduler.pauseAll();
-	}
-	
-	public void deletarPdf() throws SchedulerException {
+
 		JobDetail deletionJobDetail = JobBuilder.newJob(PdfDeleter.class).withIdentity("pdfDeletionJob", "grupo").build();
 
 		Trigger deletionTrigger = TriggerBuilder.newTrigger().withIdentity("pdfDeletionTrigger", "grupo")
 				.withSchedule(CronScheduleBuilder.weeklyOnDayAndHourAndMinute(DateBuilder.SATURDAY, 0, 0)).build();
 
-		Scheduler scheduler;
 		scheduler = StdSchedulerFactory.getDefaultScheduler();
 		scheduler.scheduleJob(deletionJobDetail, deletionTrigger);
-		scheduler.start();
-	}
-	
-	public void agendarEnvioDiario() throws SchedulerException{
-        JobDetail jobDetail = JobBuilder.newJob(SendDailyCardapio.class)
+
+        jobDetail = JobBuilder.newJob(SendDailyCardapio.class)
                                         .withIdentity("sendDailyMenuJob", "grupo")
                                         .build();
         
-        TimeOfDay inicio = TimeOfDay.hourAndMinuteOfDay(8, 1);
-        TimeOfDay fim = TimeOfDay.hourAndMinuteOfDay(14, 2);
+        TimeOfDay inicio2 = TimeOfDay.hourAndMinuteOfDay(8, 1);
+        TimeOfDay fim2 = TimeOfDay.hourAndMinuteOfDay(14, 2);
         DailyTimeIntervalScheduleBuilder dailyTime = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
-        								.startingDailyAt(inicio)
-        								.endingDailyAt(fim)
+        								.startingDailyAt(inicio2)
+        								.endingDailyAt(fim2)
         								.withIntervalInHours(6)
         								.onEveryDay();
         
-        Trigger trigger = TriggerBuilder.newTrigger()
+        trigger = TriggerBuilder.newTrigger()
                                         .withIdentity("dailyMenuTrigger", "grupo")
                                         .withSchedule(dailyTime)
                                         .build();
 
-        Scheduler scheduler;
 		scheduler = StdSchedulerFactory.getDefaultScheduler();
 		scheduler.scheduleJob(jobDetail, trigger);
+		
 		scheduler.start();
+		Thread.sleep(300L * 1000L);
+		scheduler.shutdown();
     }
 }
