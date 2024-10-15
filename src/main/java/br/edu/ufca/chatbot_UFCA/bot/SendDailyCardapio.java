@@ -5,16 +5,18 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.TelegramClient;
+
 import java.util.List;
 import br.edu.ufca.chatbot_UFCA.repository.Connection;
 import br.edu.ufca.chatbot_UFCA.utils.CheckPdf;
 
 public class SendDailyCardapio implements Job {
 
-    private CardapioBot bot;
+    private TelegramClient telegramClient;
 
-    public SendDailyCardapio() {
-        this.bot = new CardapioBot(System.getenv("CARDAPIO_TOKEN_BOT"));
+    public SendDailyCardapio(CardapioBot botOriginal) {
+        this.telegramClient = botOriginal.getTelegramClient();
     }
 
     @Override
@@ -31,7 +33,7 @@ public class SendDailyCardapio implements Job {
 						.build();
 				
 				try {
-					bot.getTelegramClient().execute(mensagem);
+					telegramClient.execute(mensagem);
 				} catch (TelegramApiException e) {
 					e.printStackTrace();
 				}
