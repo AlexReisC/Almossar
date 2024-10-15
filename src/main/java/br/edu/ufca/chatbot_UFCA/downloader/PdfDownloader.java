@@ -25,18 +25,21 @@ public class PdfDownloader implements Job {
 
 	public void baixarPdf(String url){
 		Document doc;
+		long bytes = 0;
 		try {
 			doc = Jsoup.connect(UFCA_SITE).get();
 			Element pdfLink = doc.select("a.ui.teal.button").last();
 			String pdfUrl = pdfLink.attr("href");
 			logger.info("URL do pdf: {}", pdfUrl);
 			InputStream in = new URL(pdfUrl).openStream();
-			Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
+			bytes = Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			logger.info("Erro ao tentar baixar o pdf! {}", e);
 		}
 		
-		logger.info("PDF baixado com sucesso!");
+		if(bytes != 0) {
+			logger.info("PDF baixado com sucesso!");
+		}
 	}
 
 	@Override
