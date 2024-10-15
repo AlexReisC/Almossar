@@ -14,6 +14,7 @@ public class PdfExtractor {
 	
 	public static StringBuilder[] almocoDoDia;
 	public static StringBuilder[] jantarDoDia;
+	public static StringBuilder stringBuilderVazio;
     
     public static void extrairTextoDia(String arquivo, int dia) throws IOException {
     	PDDocument doc = new PDDocument();
@@ -27,14 +28,14 @@ public class PdfExtractor {
         boolean isAlmoco = true;
         
     	almocoDoDia = new StringBuilder[] {
-    		new StringBuilder("Prato Principal: \n"), 
-    		new StringBuilder("Sopas: \n"), 
-    		new StringBuilder("Vegetariano: \n"),
-    		new StringBuilder("Guarnição: \n"),
-    		new StringBuilder("Saladas: \n"),
-    		new StringBuilder("Acompanhamentos: \n"),
-    		new StringBuilder("Suco: \n"),
-    		new StringBuilder("Sobremesa: \n")
+    		new StringBuilder("🍗 Prato Principal: \n"), 
+    		new StringBuilder("🍲 Sopas: \n"), 
+    		new StringBuilder("🥗 Vegetariano: \n"),
+    		new StringBuilder("🍝 Guarnição: \n"),
+    		new StringBuilder("🥦 Saladas: \n"),
+    		new StringBuilder("🍚 Acompanhamentos: \n"),
+    		new StringBuilder("🍎 Suco: \n"),
+    		new StringBuilder("🍫 Sobremesa: \n")
     	};
         
         jantarDoDia = new StringBuilder[] {
@@ -47,6 +48,17 @@ public class PdfExtractor {
         		new StringBuilder("Suco: \n"),
         		new StringBuilder("Sobremesa: \n")
         };
+        
+        stringBuilderVazio = new StringBuilder (
+        		"🍗 Prato Principal: \n" +
+        		"🍲 Sopas: \n" + 
+        		"🥗 Vegetariano: \n" +
+        		"🍝 Guarnição: \n" +
+        		"🥦 Saladas: \n" +
+        		"🍚 Acompanhamentos: \n" +
+        		"🍎 Suco: \n" +
+        		"🍫 Sobremesa: \n"
+        );
         
         String ultimoTipoPrato = "";
         
@@ -108,9 +120,12 @@ public class PdfExtractor {
 	                	refeicoesDia[6].append("- " + prato).append("\n");
 	                	break;
 	                case "sobremesa":
-	                	prato = prato.replace(" ", " \n");
+	                	if(prato.contains("/")) {
+	                		continue;
+	                	}
+	                	prato = prato.replace(" ", "\n");
 	                	prato = "- " + prato;
-	                	prato = prato.replace("D", "- D");                        	
+	                	prato = prato.replace("D", "\n- D");                        	
 	                    refeicoesDia[7].append(prato);
 	                    break;
 				}
