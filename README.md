@@ -28,7 +28,7 @@ O cardapio do RU é disponibilizado no site da UFCA de forma semanal, em formato
 - **PostgreSQL** para salvar os usuários
 - **Telegram Bot API Token** (necessário se registrar no [BotFather](https://core.telegram.org/bots#botfather)).
 
-### Instalação
+### Instalação e execução
 1. Clone o repositório
 ```bash
 git clone https://github.com/alexreisc/Almossar.git
