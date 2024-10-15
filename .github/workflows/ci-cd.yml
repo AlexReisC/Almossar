@@ -20,6 +20,21 @@ jobs:
     - name: Build with Maven
       run: mvn clean package
 
+    - name: Debug - SSH Setup
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        echo "Setting up SSH for $USERNAME@$HOST"
+        echo "$SSH_PRIVATE_KEY" > private_key
+        chmod 600 private_key
+        ssh-keygen -y -f private_key > public_key
+        echo "Public key generated:"
+        cat public_key
+        echo "Attempting SSH connection with verbose output:"
+        ssh -v -o StrictHostKeyChecking=no -i private_key $USERNAME@$HOST 'echo "SSH connection successful"'
+
     - name: Deploy to Cloud Instance
       env:
         HOST: ${{ secrets.HOST }}
@@ -27,12 +42,12 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-        scp -o StrictHostKeyChecking=no -i private_key target/*.jar $USERNAME@$HOST:/home/$USERNAME/
-        ssh -o StrictHostKeyChecking=no -i private_key $USERNAME@$HOST '
+        scp -v -o StrictHostKeyChecking=no -i private_key target/*.jar $USERNAME@$HOST:/home/$USERNAME/
+        ssh -v -o StrictHostKeyChecking=no -i private_key $USERNAME@$HOST '
           sudo systemctl stop cardapio &&
           sudo mv /home/$USERNAME/*.jar /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
           sudo chown $USERNAME:$USERNAME /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
           sudo chmod 644 /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
           sudo systemctl start cardapio
         '
-        rm -f private_key
+        rm -f private_key public_key
