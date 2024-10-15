@@ -1,4 +1,4 @@
-package br.edu.ufca.chatbot_UFCA.utils;
+package br.edu.ufca.chatbot_UFCA.scheduler;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.DailyTimeIntervalScheduleBuilder;
