@@ -7,7 +7,8 @@ import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import br.edu.ufca.chatbot_UFCA.bot.CardapioBot;
-import br.edu.ufca.chatbot_UFCA.utils.JobScheduler;
+import br.edu.ufca.chatbot_UFCA.bot.SendDailyCardapio;
+import br.edu.ufca.chatbot_UFCA.scheduler.JobScheduler;
 
 public class Main 
 {
@@ -18,8 +19,10 @@ public class Main
 		
 		JobScheduler jobScheduler = new JobScheduler();
 		try {
+			CardapioBot meuBot = new CardapioBot(botToken);
+			SendDailyCardapio send = new SendDailyCardapio(meuBot);
+			botsApplication.registerBot(botToken, meuBot);
 			jobScheduler.agendarTarefas();
-			botsApplication.registerBot(botToken, new CardapioBot(botToken));
 			Thread.currentThread().join();
 		} catch (SchedulerException e) {
 			logger.info("Erro ao agendar jobs na classe JobScheduler. {}", e);
@@ -28,6 +31,5 @@ public class Main
 		} catch (InterruptedException e3) {
 			logger.info("Thread atual interrompida {}", e3);
 		}
-    	
     }
 }
