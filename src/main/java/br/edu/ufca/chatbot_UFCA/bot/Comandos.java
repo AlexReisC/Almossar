@@ -51,18 +51,17 @@ public class Comandos {
 	}
 	
 	public static String obterCardapio(){
-		if(!CheckPdf.pdfExiste()) {
-			return "O cardapio ainda não foi disponibilizado, tente mais tarde.";
-		}
 		LocalDate hoje = LocalDate.now();
 		int dia = hoje.getDayOfWeek().getValue();
-		dia = 5; 
 		if(dia > 5) {
 			return "Sem cardápio para hoje.";
 		}
 		
+		if(!CheckPdf.pdfExiste()) {
+			return "O cardapio ainda não foi disponibilizado, tente mais tarde.";
+		}
+		
 		int diaDoMes = hoje.getDayOfMonth();
-		hoje.getDayOfWeek().toString();
 		int mes = hoje.getMonthValue();
 		int ano = hoje.getYear();
 		
@@ -72,7 +71,7 @@ public class Comandos {
 			e.printStackTrace();
 		}
 		
-		String cabecalho = "Cardápio de " + diaDoMes + "/" + mes + "/" + ano;
+		String cabecalho = "Cardápio de 📅 " + diaDoMes + "/" + mes + "/" + ano;
 		
 		StringBuilder refeicao = new StringBuilder();		
 		
@@ -81,15 +80,30 @@ public class Comandos {
 			for(StringBuilder stringBuilder : PdfExtractor.jantarDoDia) {
 				refeicao.append(stringBuilder.toString());
 			}
-			return cabecalho + "\nJantar\n" + refeicao.toString() + 
+			
+			int vazio = refeicao.compareTo(PdfExtractor.stringBuilderVazio);
+			if(vazio == 0) {
+				return "Sem cardápio para o almoço :(";
+			}
+			
+			return cabecalho + "\n🌑 Jantar\n" + refeicao.toString() + 
 					"\n\n* Contém leite/lactose/glúten\n" + 
 					"OBS: O cardápio pode sofrer alterações.\n" +
 					"(O CARDAPIO DO JANTAR É DISPONIBILIZADO AQUI APÓS ÀS 14:00 HORAS)";
 		}
+		
 		for(StringBuilder stringBuilder : PdfExtractor.almocoDoDia) {
-			refeicao.append(stringBuilder.toString());
+			if(!stringBuilder.toString().contains("Sopas:")) {
+				refeicao.append(stringBuilder.toString());
+			}
 		}
-		return cabecalho + "\nAlmoço\n" + refeicao.toString() + 
+		
+		int vazio = refeicao.compareTo(PdfExtractor.stringBuilderVazio);
+		if(vazio == 0) {
+			return "Sem cardápio para o almoço :(";
+		}
+		
+		return cabecalho + "\n☀️ Almoço\n" + refeicao.toString() + 
 				"\n\n* Contém leite/lactose/glúten\n" + 
 				"OBS: O cardápio pode sofrer alterações.\n" +
 				"(O CARDAPIO DO JANTAR É DISPONIBILIZADO AQUI APÓS ÀS 14:00 HORAS)";		
