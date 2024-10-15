@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.List;
 import br.edu.ufca.chatbot_UFCA.repository.Connection;
-import br.edu.ufca.chatbot_UFCA.utils.CheckPdf;
 
 public class SendDailyCardapio implements Job {
 
@@ -24,21 +23,21 @@ public class SendDailyCardapio implements Job {
         List<Long> usuarios = Connection.obterUsuarios();
         
         String cardapio = Comandos.obterCardapio(); 
-		if(CheckPdf.pdfExiste()) {
-			for (Long chatId : usuarios) {
-				SendMessage mensagem = SendMessage
-						.builder()
-						.chatId(chatId)
-						.text(cardapio)
-						.build();
-				
-				try {
-					telegramClient.execute(mensagem);
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
+
+		for (Long chatId : usuarios) {
+			SendMessage mensagem = SendMessage
+					.builder()
+					.chatId(chatId)
+					.text(cardapio)
+					.build();
+			
+			try {
+				telegramClient.execute(mensagem);
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
 			}
 		}
+
     }
     
 }

@@ -43,8 +43,8 @@ public class Comandos {
 		case "/contato":
 			return "Este bot foi desenvolvido por Alex Reis. Se tiver dúvidas, sugestões de melhorias ou quer reportar um problema:\n" +
 					"📷 Instagram: @c_alexreis \n" +
-					"📧 Email: alex.reis@aluno.ufca.edu.br \n" + 
-					"🌐 Linkedin: https://linkedin.com/in/alex-reis-cavalcante \n";
+					"📧 Email: reisc2018@gmail.com \n" + 
+					"🌐 Linkedin: https://linkedin.com/in/alex-reis-cavalcante";
 		default:
 			return "Não entendi, este comando. Digite '/ajuda' para listar os comandos disponíveis.";
 		}
@@ -100,7 +100,7 @@ public class Comandos {
 		
 		int vazio = refeicao.compareTo(PdfExtractor.stringBuilderVazio);
 		if(vazio == 0) {
-			return "Sem cardápio para o almoço :(";
+			return "Sem cardápio para o jantar :(";
 		}
 		
 		return cabecalho + "\n☀️ Almoço\n" + refeicao.toString() + 
