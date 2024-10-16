@@ -51,12 +51,12 @@ CREATE TABLE cardapio_bot.usuario (
 SETX VARIABLE_NAME YOUR_BOT_TOKEN
 ```
 
-1. Compile o código (isto vai gerar um arquivo `.jar`)
+5. Compile o código (isto vai gerar um arquivo `.jar`)
 ```console
 mvn clean package
 ```
 
-1. Execute o bot
+6. Execute o bot
 ```console
 java -jar target/Almossar-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 ```
