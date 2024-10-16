@@ -45,16 +45,18 @@ CREATE TABLE cardapio_bot.usuario (
 
 3. Na classe `Connection.java` edite *URL*, *USER* e *PASSWORD* para acessar seu banco.
 4. Cire uma variavel de ambiente para guardar o *token* do seu bot
+
+**Windows**
 ```console
 SETX VARIABLE_NAME YOUR_BOT_TOKEN
 ```
 
-5. Compile o código (isto vai gerar um arquivo `.jar`)
+1. Compile o código (isto vai gerar um arquivo `.jar`)
 ```console
 mvn clean package
 ```
 
-6. Execute o bot
+1. Execute o bot
 ```console
 java -jar target/Almossar-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 ```
@@ -63,14 +65,14 @@ java -jar target/Almossar-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 Optei por estruturar o projeto na forma "package by feature".
 
 - `java/br/edu/ufca/chatbot_UFCA/`
-  - `Main.java`: Classe que executa o código
-  - `bot/`: Implementação do bot e seus comandos
-  - `downloader/`: Baixar o PDF direto do site e excluir o antigo
-  - `extractor/`: Extração do texto do PDF
-  - `repository/`: Conexão com o banco de dados
-  - `scheduler/`: Agendamento de tarefas
-  - `utils/`: Verificar se PDF existe
-- `resources/arquivos/`: Armazena o arquivo PDF baixado
+  - [`Main.java`](src/main/java/br/edu/ufca/chatbot_UFCA/): Classe que executa o código
+  - [`bot/`](src/main/java/br/edu/ufca/chatbot_UFCA/bot/): Implementação do bot e seus comandos
+  - [`downloader/`](src/main/java/br/edu/ufca/chatbot_UFCA/downloader/): Baixar o PDF direto do site e excluir o antigo
+  - [`extractor/`](src/main/java/br/edu/ufca/chatbot_UFCA/extractor/): Extração do texto do PDF
+  - [`repository/`](src/main/java/br/edu/ufca/chatbot_UFCA/repository/): Conexão com o banco de dados
+  - [`scheduler/`](src/main/java/br/edu/ufca/chatbot_UFCA/scheduler/): Agendamento de tarefas
+  - [`utils/`](src/main/java/br/edu/ufca/chatbot_UFCA/utils/): Verificar se PDF existe
+- [`resources/arquivos/`](src/main/resources/arquivos/): Armazena o arquivo PDF baixado
 
 ## Contribuição
 Sua contribuição é bem-vinda! Abra um pull request :) .
