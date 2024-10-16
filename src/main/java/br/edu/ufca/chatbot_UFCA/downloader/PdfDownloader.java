@@ -13,6 +13,8 @@ import org.quartz.JobExecutionException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,7 +25,7 @@ public class PdfDownloader implements Job {
 	private final String UFCA_SITE = "https://www.ufca.edu.br/assuntos-estudantis/refeitorio-universitario/cardapios/";
 	public static final String NOME_ARQUIVO = "src\\main\\resources\\arquivos\\cardapio.pdf";
 
-	public void baixarPdf(String url){
+	public void baixarPdf(){
 		Document doc;
 		long bytes = 0;
 		try {
@@ -31,10 +33,15 @@ public class PdfDownloader implements Job {
 			Element pdfLink = doc.select("a.ui.teal.button").last();
 			String pdfUrl = pdfLink.attr("href");
 			logger.info("URL do pdf: {}", pdfUrl);
-			InputStream in = new URL(pdfUrl).openStream();
+			
+			URI uri = new URI(pdfUrl.replace(" ", "%20"));
+			URL url = uri.toURL();
+			InputStream in = url.openStream();
 			bytes = Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			logger.info("Erro ao tentar baixar o pdf! {}", e);
+			logger.info("Erro ao acessar o arquivo pdf! {}", e);
+		} catch (URISyntaxException e2) {
+			logger.info("Erro na URI: {}", e2);
 		}
 		
 		if(bytes != 0) {
@@ -44,6 +51,6 @@ public class PdfDownloader implements Job {
 
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		baixarPdf(NOME_ARQUIVO);
+		baixarPdf();
 	}
 }
