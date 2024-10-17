@@ -22,7 +22,7 @@ public class JobScheduler {
 		JobDetail jobDetail = JobBuilder.newJob(PdfDownloader.class).withIdentity("pdfDownloadJob", "grupo").build();
 
 		TimeOfDay inicio = TimeOfDay.hourAndMinuteOfDay(8, 0);
-		TimeOfDay fim = TimeOfDay.hourAndMinuteOfDay(22, 00);
+		TimeOfDay fim = TimeOfDay.hourAndMinuteOfDay(11, 00);
 
 		DailyTimeIntervalScheduleBuilder dailySchedule = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
 				.startingDailyAt(inicio).endingDailyAt(fim).withIntervalInMinutes(15)
@@ -64,7 +64,7 @@ public class JobScheduler {
 		scheduler.scheduleJob(jobDetail, trigger);
 		
 		scheduler.start();
-		Thread.sleep(300L * 1000L);
+		Thread.sleep(120L * 1000L);
 		scheduler.shutdown();
     }
 }

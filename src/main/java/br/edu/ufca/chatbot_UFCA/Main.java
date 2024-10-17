@@ -19,10 +19,10 @@ public class Main
 		
 		JobScheduler jobScheduler = new JobScheduler();
 		try {
+			jobScheduler.agendarTarefas();
 			CardapioBot meuBot = new CardapioBot(botToken);
 			SendDailyCardapio send = new SendDailyCardapio(meuBot);
 			botsApplication.registerBot(botToken, meuBot);
-			jobScheduler.agendarTarefas();
 			Thread.currentThread().join();
 		} catch (SchedulerException e) {
 			logger.info("Erro ao agendar jobs na classe JobScheduler. {}", e);
