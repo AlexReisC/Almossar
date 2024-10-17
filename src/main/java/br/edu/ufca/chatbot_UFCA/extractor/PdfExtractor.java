@@ -28,14 +28,14 @@ public class PdfExtractor {
         boolean isAlmoco = true;
         
     	almocoDoDia = new StringBuilder[] {
-    		new StringBuilder("🍗 Prato Principal: \n"), 
-    		new StringBuilder("🍲 Sopas: \n"), 
-    		new StringBuilder("🥗 Vegetariano: \n"),
-    		new StringBuilder("🍝 Guarnição: \n"),
-    		new StringBuilder("🥦 Saladas: \n"),
-    		new StringBuilder("🍚 Acompanhamentos: \n"),
-    		new StringBuilder("🍎 Suco: \n"),
-    		new StringBuilder("🍫 Sobremesa: \n")
+    		new StringBuilder("Prato Principal: \n"), 
+    		new StringBuilder("Sopas: \n"), 
+    		new StringBuilder("Vegetariano: \n"),
+    		new StringBuilder("Guarnição: \n"),
+    		new StringBuilder("Saladas: \n"),
+    		new StringBuilder("Acompanhamentos: \n"),
+    		new StringBuilder("Suco: \n"),
+    		new StringBuilder("Sobremesa: \n")
     	};
         
         jantarDoDia = new StringBuilder[] {
@@ -50,14 +50,14 @@ public class PdfExtractor {
         };
         
         stringBuilderVazio = new StringBuilder (
-        		"🍗 Prato Principal: \n" +
-        		"🍲 Sopas: \n" + 
-        		"🥗 Vegetariano: \n" +
-        		"🍝 Guarnição: \n" +
-        		"🥦 Saladas: \n" +
-        		"🍚 Acompanhamentos: \n" +
-        		"🍎 Suco: \n" +
-        		"🍫 Sobremesa: \n"
+        		"Prato Principal: \n" +
+        		"Sopas: \n" + 
+        		"Vegetariano: \n" +
+        		"Guarnição: \n" +
+        		"Saladas: \n" +
+        		"Acompanhamentos: \n" +
+        		"Suco: \n" +
+        		"Sobremesa: \n"
         );
         
         String ultimoTipoPrato = "";
@@ -80,7 +80,7 @@ public class PdfExtractor {
                 }
             }        
         	
-        	String prato = cells.get(dia).getText().replace("\n", " ");
+        	String prato = cells.get(dia).getText().replace("\n", "  ");
             prato = prato.contains("FEIRA") || prato.contains("feira")? "" : prato;
             
             if(!prato.isEmpty()) {

@@ -6,6 +6,7 @@ import java.time.LocalTime;
 
 import br.edu.ufca.chatbot_UFCA.downloader.PdfDownloader;
 import br.edu.ufca.chatbot_UFCA.extractor.PdfExtractor;
+import br.edu.ufca.chatbot_UFCA.utils.CardapioFormatter;
 import br.edu.ufca.chatbot_UFCA.utils.CheckPdf;
 
 public class Comandos {
@@ -86,7 +87,7 @@ public class Comandos {
 				return "Sem cardápio para o almoço :(";
 			}
 			
-			return cabecalho + "\n🌑 Jantar\n" + refeicao.toString() + 
+			return cabecalho + "\n🌑 Jantar\n\n" + CardapioFormatter.editarCardapio(refeicao.toString()) + 
 					"\n\n* Contém leite/lactose/glúten\n" + 
 					"OBS: O cardápio pode sofrer alterações.\n" +
 					"(O CARDAPIO DO JANTAR É DISPONIBILIZADO AQUI APÓS ÀS 14:00 HORAS)";
@@ -103,7 +104,7 @@ public class Comandos {
 			return "Sem cardápio para o jantar :(";
 		}
 		
-		return cabecalho + "\n☀️ Almoço\n" + refeicao.toString() + 
+		return cabecalho + "\n☀️ Almoço\n\n" + CardapioFormatter.editarCardapio(refeicao.toString()) + 
 				"\n\n* Contém leite/lactose/glúten\n" + 
 				"OBS: O cardápio pode sofrer alterações.\n" +
 				"(O CARDAPIO DO JANTAR É DISPONIBILIZADO AQUI APÓS ÀS 14:00 HORAS)";		
