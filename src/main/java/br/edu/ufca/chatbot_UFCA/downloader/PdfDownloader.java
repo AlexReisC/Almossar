@@ -11,6 +11,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -23,7 +24,7 @@ import java.nio.file.StandardCopyOption;
 public class PdfDownloader implements Job {
 	private static final Logger logger = LogManager.getLogger(PdfDownloader.class);
 	private final String UFCA_SITE = "https://www.ufca.edu.br/assuntos-estudantis/refeitorio-universitario/cardapios/";
-	public static final String NOME_ARQUIVO = "src\\main\\resources\\arquivos\\cardapio.pdf";
+	public static final String NOME_ARQUIVO = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "arquivos" + File.separator + "cardapio.pdf";
 
 	public void baixarPdf(){
 		Document doc;
@@ -31,21 +32,27 @@ public class PdfDownloader implements Job {
 		try {
 			doc = Jsoup.connect(UFCA_SITE).get();
 			Element pdfLink = doc.select("a.ui.teal.button").last();
-			String pdfUrl = pdfLink.attr("href");
-			logger.info("URL do pdf: {}", pdfUrl);
+			if(pdfLink == null) {
+				logger.error("Link do PDF nao encontrado na pagina");
+				return;
+			}
 			
-			URI uri = new URI(pdfUrl.replace(" ", "%20"));
+			String pdfUrl = pdfLink.attr("href");
+			logger.info("URL original do PDF: {}", pdfUrl);
+	        
+			URI uri = new URI(pdfUrl);
 			URL url = uri.toURL();
-			InputStream in = url.openStream();
-			bytes = Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
+			try (InputStream in = url.openStream()){
+				bytes = Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
+			}
 		} catch (IOException e) {
-			logger.info("Erro ao acessar o arquivo pdf! {}", e);
-		} catch (URISyntaxException e2) {
-			logger.info("Erro na URI: {}", e2);
+			logger.error("Erro ao acessar ou baixar o arquivo PDF: {}", e.getMessage(), e);
+		} catch (URISyntaxException e) {
+			logger.error("Erro na URI: {}", e.getMessage(), e);
 		}
 		
 		if(bytes != 0) {
-			logger.info("PDF baixado com sucesso!");
+			logger.info("PDF baixado com sucesso! Tamanho: {} bytes", bytes);
 		}
 	}
 
