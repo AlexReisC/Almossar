@@ -1,13 +1,10 @@
 package br.edu.ufca.chatbot_UFCA.scheduler;
 
 import org.quartz.CronScheduleBuilder;
-import org.quartz.DailyTimeIntervalScheduleBuilder;
-import org.quartz.DateBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.TimeOfDay;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
@@ -19,52 +16,50 @@ import br.edu.ufca.chatbot_UFCA.downloader.PdfDownloader;
 public class JobScheduler {
 
 	public void agendarTarefas() throws SchedulerException, InterruptedException {
-		JobDetail jobDetail = JobBuilder.newJob(PdfDownloader.class).withIdentity("pdfDownloadJob", "grupo").build();
-
-		TimeOfDay inicio = TimeOfDay.hourAndMinuteOfDay(8, 0);
-		TimeOfDay fim = TimeOfDay.hourAndMinuteOfDay(11, 00);
-
-		DailyTimeIntervalScheduleBuilder dailySchedule = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
-				.startingDailyAt(inicio).endingDailyAt(fim).withIntervalInMinutes(15)
-				.onDaysOfTheWeek(DateBuilder.MONDAY, DateBuilder.TUESDAY);
+		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();		
+		
+		// Job e Trigger de download 
+		JobDetail job = JobBuilder.newJob(PdfDownloader.class).withIdentity("pdfDownloadJob", "grupo").build();
 
 		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("pdfDownloadTrigger", "grupo")
-				.withSchedule(dailySchedule).build();
+				.withSchedule(CronScheduleBuilder.cronSchedule("0 0/15 8-11 ? * MON-TUE")).build();
 
-		Scheduler scheduler;
-		scheduler = StdSchedulerFactory.getDefaultScheduler();
-		scheduler.scheduleJob(jobDetail, trigger);
+		scheduler.scheduleJob(job, trigger);
+		
+		// Job e Trigger de delecao 
+		job = JobBuilder.newJob(PdfDeleter.class).withIdentity("pdfDeletionJob", "grupo").build();
 
-		JobDetail deletionJobDetail = JobBuilder.newJob(PdfDeleter.class).withIdentity("pdfDeletionJob", "grupo").build();
+		trigger = TriggerBuilder.newTrigger().withIdentity("pdfDeletionTrigger", "grupo")
+				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 1 ? * SAT")).build();
 
-		Trigger deletionTrigger = TriggerBuilder.newTrigger().withIdentity("pdfDeletionTrigger", "grupo")
-				.withSchedule(CronScheduleBuilder.weeklyOnDayAndHourAndMinute(DateBuilder.SATURDAY, 0, 0)).build();
+		scheduler.scheduleJob(job, trigger);
 
-		scheduler = StdSchedulerFactory.getDefaultScheduler();
-		scheduler.scheduleJob(deletionJobDetail, deletionTrigger);
-
-        jobDetail = JobBuilder.newJob(SendDailyCardapio.class)
-                                        .withIdentity("sendDailyMenuJob", "grupo")
+		// Job e Trigger de envio 
+        job = JobBuilder.newJob(SendDailyCardapio.class)
+                                        .withIdentity("sendDailyJob1", "grupo")
                                         .build();
-        
-        TimeOfDay inicio2 = TimeOfDay.hourAndMinuteOfDay(8, 1);
-        TimeOfDay fim2 = TimeOfDay.hourAndMinuteOfDay(14, 2);
-        DailyTimeIntervalScheduleBuilder dailyTime = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
-        								.startingDailyAt(inicio2)
-        								.endingDailyAt(fim2)
-        								.withIntervalInHours(6)
-        								.onEveryDay();
         
         trigger = TriggerBuilder.newTrigger()
                                         .withIdentity("dailyMenuTrigger", "grupo")
-                                        .withSchedule(dailyTime)
+                                        .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * MON-FRI"))
                                         .build();
 
-		scheduler = StdSchedulerFactory.getDefaultScheduler();
-		scheduler.scheduleJob(jobDetail, trigger);
-		
+        scheduler.scheduleJob(job, trigger);
+        
+        job = JobBuilder.newJob(SendDailyCardapio.class)
+                .withIdentity("sendDailyJob2", "grupo")
+                .build();
+
+        trigger = TriggerBuilder.newTrigger()
+                .withIdentity("dailyMenuTrigger2", "grupo")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 14 ? * MON-FRI"))
+                .build();
+
+        scheduler.scheduleJob(job, trigger);
+        
+        // agendar e iniciar
 		scheduler.start();
-		Thread.sleep(120L * 1000L);
-		scheduler.shutdown();
+		Thread.sleep(300L * 1000L);
+		scheduler.shutdown(true);
     }
 }
