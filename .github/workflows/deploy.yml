@@ -26,12 +26,13 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
-        echo scp -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY target/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar $USERNAME@$HOST:/home/$USERNAME/
-        ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $USERNAME@$HOST '
+        echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+        scp -o StrictHostKeyChecking=no -i private_key target/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar $USERNAME@$HOST:/home/$USERNAME/
+        ssh -o StrictHostKeyChecking=no -i private_key $USERNAME@$HOST '
           sudo systemctl stop cardapio-bot &&
-          rm /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
+          sudo mv /home/$USERNAME/*.jar /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
           sudo chown $USERNAME:$USERNAME /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
           sudo chmod 755 /home/$USERNAME/chatbot-UFCA-0.0.1-SNAPSHOT-jar-with-dependencies.jar &&
-          sudo systemctl daemon-reload
-          sudo systemctl start cardapio-bot
+          sudo systemctl start cardapio
         '
+        rm -f private_key
