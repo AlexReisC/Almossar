@@ -35,29 +35,29 @@ public class JobScheduler {
 		scheduler.scheduleJob(job, trigger);
 
 		// Job e Trigger de envio 
-        job = JobBuilder.newJob(SendDailyCardapio.class)
-                                        .withIdentity("sendDailyJob1", "grupo")
-                                        .build();
-        
-        trigger = TriggerBuilder.newTrigger()
-                                        .withIdentity("dailyMenuTrigger", "grupo")
-                                        .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * MON-FRI"))
-                                        .build();
+                job = JobBuilder.newJob(SendDailyCardapio.class)
+                                                .withIdentity("sendDailyJob1", "grupo")
+                                                .build();
+                
+                trigger = TriggerBuilder.newTrigger()
+                                                .withIdentity("dailyMenuTrigger", "grupo")
+                                                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * MON-FRI"))
+                                                .build();
 
-        scheduler.scheduleJob(job, trigger);
-        
-        job = JobBuilder.newJob(SendDailyCardapio.class)
-                .withIdentity("sendDailyJob2", "grupo")
-                .build();
+                scheduler.scheduleJob(job, trigger);
+                
+                job = JobBuilder.newJob(SendDailyCardapio.class)
+                        .withIdentity("sendDailyJob2", "grupo")
+                        .build();
 
-        trigger = TriggerBuilder.newTrigger()
-                .withIdentity("dailyMenuTrigger2", "grupo")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 14 ? * MON-FRI"))
-                .build();
+                trigger = TriggerBuilder.newTrigger()
+                        .withIdentity("dailyMenuTrigger2", "grupo")
+                        .withSchedule(CronScheduleBuilder.cronSchedule("0 0 14 ? * MON-FRI"))
+                        .build();
 
-        scheduler.scheduleJob(job, trigger);
-        
-        // agendar e iniciar
+                scheduler.scheduleJob(job, trigger);
+                
+                // agendar e iniciar
 		scheduler.start();
 		Thread.sleep(300L * 1000L);
 		scheduler.shutdown(true);
