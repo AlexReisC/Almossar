@@ -25,11 +25,11 @@ public class Main
 			botsApplication.registerBot(botToken, meuBot);
 			Thread.currentThread().join();
 		} catch (SchedulerException e) {
-			logger.info("Erro ao agendar jobs na classe JobScheduler. {}", e);
+			logger.error("Erro ao agendar jobs na classe JobScheduler. {}", e);
 		} catch (TelegramApiException e2) {
-			logger.info("Erro ao registrar bot {}", e2);
+			logger.error("Erro ao registrar bot {}", e2);
 		} catch (InterruptedException e3) {
-			logger.info("Thread atual interrompida {}", e3);
+			logger.error("Thread atual interrompida {}", e3);
 		}
     }
 }

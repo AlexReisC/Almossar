@@ -27,6 +27,7 @@ public class PdfDownloader implements Job {
 	public static final String NOME_ARQUIVO = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "arquivos" + File.separator + "cardapio.pdf";
 
 	public void baixarPdf(){
+		logger.info("Iniciando download do PDF");
 		Document doc;
 		long bytes = 0;
 		try {

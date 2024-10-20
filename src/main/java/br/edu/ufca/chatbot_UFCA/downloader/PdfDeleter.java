@@ -16,13 +16,14 @@ public class PdfDeleter implements Job{
 	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
+		logger.info("Delecao do PDF iniciada...");
 		try {
 			boolean deleted = Files.deleteIfExists(Paths.get(PdfDownloader.NOME_ARQUIVO));
 			logger.info("PDF deletado? {}", deleted);
 		} catch (DirectoryNotEmptyException e) {
-			logger.info("O arquivo é um diretorio nao vazio");
+			logger.error("O arquivo é um diretorio nao vazio");
 		} catch (IOException e2) {
-			logger.info("Erro de I/O");
+			logger.error("Erro de I/O");
 		}
 	}
 	

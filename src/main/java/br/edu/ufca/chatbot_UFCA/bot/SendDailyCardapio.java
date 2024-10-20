@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.List;
 import br.edu.ufca.chatbot_UFCA.repository.Connection;
+import br.edu.ufca.chatbot_UFCA.utils.CheckPdf;
 
 public class SendDailyCardapio implements Job {
 
@@ -22,8 +23,12 @@ public class SendDailyCardapio implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         List<Long> usuarios = Connection.obterUsuarios();
         
+        if(!CheckPdf.pdfExiste()) {
+        	System.out.println("Envio programado nao feito, pois PDF nao existe!");
+        	return;
+        }
+        
         String cardapio = Comandos.obterCardapio(); 
-
 		for (Long chatId : usuarios) {
 			SendMessage mensagem = SendMessage
 					.builder()
