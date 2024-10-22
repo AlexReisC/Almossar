@@ -1,6 +1,7 @@
 package br.edu.ufca.chatbot_UFCA.repository;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,8 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 public class Connection {
 	private final static String URL = "jdbc:postgresql://localhost:5432/cardapio_bot";
-	private final static String USER = "seu_usuario";
-	private final static String PASSWORD = "sua_senha";
+	private final static String USER = "postgres";
+	private final static String PASSWORD = "postgres";
 	
 	private static final Logger logger = LogManager.getLogger(Connection.class);
 	
@@ -22,37 +23,39 @@ public class Connection {
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
-			logger.info("Driver nao encontrado {}", e);
+			logger.error("Driver nao encontrado {}", e);
 		}
 		java.sql.Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 		return conn;
 	}
 	
-	public static boolean usuarioNaoSalvo(Long chatId) {
+	public static boolean usuarioSalvo(Long chatId) {
 		String sql = "SELECT '%d' FROM cardapio_bot.usuario;".formatted(chatId.longValue());
-		boolean existe = false;
 		try (java.sql.Connection conn = createConnection()) {
 			Statement stmt = conn.createStatement();
 			ResultSet rset = stmt.executeQuery(sql);
-			existe = rset.equals(null);
+			return rset.next();
 		} catch (SQLException e) {
-			logger.info("Erro de acesso ao BD, {}", e);
+			logger.error("Erro de acesso ao BD, {}", e.getMessage(), e);
+			return false;
 		}
-		return existe;
 	}
 	
 	public static void salvarUsuario(Long chatId) {
-		if(usuarioNaoSalvo(chatId)) {
-			String sql = "INSERT INTO cardapio_bot.usuario (chatId) VALUES ('%d');".formatted(chatId.longValue());
+		if(!usuarioSalvo(chatId)) {
+			String sql = "INSERT INTO cardapio_bot.usuario (chatId) VALUES (?);";
 			try (java.sql.Connection conn = createConnection()) {
-				Statement stmt = conn.createStatement();
-				stmt.executeUpdate(sql);
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setLong(1, chatId);
+				stmt.executeUpdate();
 			} catch (SQLException e) {
-				logger.info("Erro de acesso ao BD, {}", e);
+				logger.error("Erro de acesso ao BD, {}", e.getMessage(), e);
+				return;
 			}
 			logger.info("Usuario {} salvo", chatId);
+		} else {
+			logger.info("Usuario {} nao salvo, pois ja existe no BD.", chatId);
 		}
-		logger.info("Usuario {} nao salvo, pois ja existe no BD.", chatId);
 	}
 	
 	public static List<Long> obterUsuarios() {
@@ -64,10 +67,11 @@ public class Connection {
 			Statement stmt = connection.createStatement();
 			ResultSet result = stmt.executeQuery(sql);
 			while(result.next()) {
-				idUsuarios.add(result.getBigDecimal("chatId").longValue());
+				long chatId = result.getBigDecimal("chatId").longValue();
+				idUsuarios.add(chatId);
 			}
 		} catch (SQLException e) {
-			logger.info("Erro de acesso ao BD. {}", e);
+			logger.error("Erro de acesso ao BD. {}", e);
 		}
 		
 		return idUsuarios;
