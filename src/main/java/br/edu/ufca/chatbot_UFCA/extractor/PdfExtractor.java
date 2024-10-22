@@ -78,10 +78,15 @@ public class PdfExtractor {
                 if(ultimoTipoPrato.contains("ompanham")) {
                 	ultimoTipoPrato = "acompanhamentos";
                 }
-            }        
+            }
         	
-        	String prato = cells.get(dia).getText().replace("\n", "  ");
-            prato = prato.contains("FEIRA") || prato.contains("feira")? "" : prato;
+        	boolean principalVazio = almocoDoDia[0].toString().contentEquals("Prato Principal: \n");
+        	if(tipoPrato.isEmpty() && isAlmoco && principalVazio) {
+            	ultimoTipoPrato = "principal";
+            }
+        	
+        	String prato = cells.get(dia).getText();
+            prato = prato.contains("FEIRA") || prato.contains("feira") ? "" : prato;
             
             if(!prato.isEmpty()) {
             	StringBuilder[] refeicoesDia = isAlmoco ? almocoDoDia : jantarDoDia;
@@ -90,13 +95,16 @@ public class PdfExtractor {
 				if(ultimoTipoPrato.equals("vegetariano") && !vegetarianoVazio && isAlmoco) {
 					ultimoTipoPrato = "saladas";
             	}
-            	
+
 				if(ultimoTipoPrato.equals("sobremesa") && !isAlmoco && !prato.contains("Doce")) {
             		ultimoTipoPrato = "principal";
             	}
 				
 				switch (ultimoTipoPrato) {
 	                case "principal":
+	                	if(prato.contains("/")) {
+	                		continue;
+	                	}
 	                    refeicoesDia[0].append("- " + prato).append("\n");
 	                    break;
 	                case "sopa":
