@@ -16,50 +16,49 @@ import br.edu.ufca.chatbot_UFCA.downloader.PdfDownloader;
 public class JobScheduler {
 
 	public void agendarTarefas() throws SchedulerException, InterruptedException {
-		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();		
-		
-		// Job e Trigger de download 
-		JobDetail job = JobBuilder.newJob(PdfDownloader.class).withIdentity("pdfDownloadJob", "grupo").build();
+		// Inicializa o scheduler como uma variável de classe
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+        
+        // Job e Trigger de download 
+        JobDetail downloadJob = JobBuilder.newJob(PdfDownloader.class)
+                .withIdentity("pdfDownloadJob", "grupo")
+                .build();
+        Trigger downloadTrigger = TriggerBuilder.newTrigger()
+                .withIdentity("pdfDownloadTrigger", "grupo")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0/15 8-11 ? * MON-TUE"))
+                .build();
+        scheduler.scheduleJob(downloadJob, downloadTrigger);
+        
+        // Job e Trigger de delecao 
+        JobDetail deleteJob = JobBuilder.newJob(PdfDeleter.class)
+                .withIdentity("pdfDeletionJob", "grupo")
+                .build();
+        Trigger deleteTrigger = TriggerBuilder.newTrigger()
+                .withIdentity("pdfDeletionTrigger", "grupo")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 1 ? * SAT"))
+                .build();
+        scheduler.scheduleJob(deleteJob, deleteTrigger);
 
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("pdfDownloadTrigger", "grupo")
-				.withSchedule(CronScheduleBuilder.cronSchedule("0 0/15 8-11 ? * MON-TUE")).build();
-
-		scheduler.scheduleJob(job, trigger);
-		
-		// Job e Trigger de delecao 
-		job = JobBuilder.newJob(PdfDeleter.class).withIdentity("pdfDeletionJob", "grupo").build();
-
-		trigger = TriggerBuilder.newTrigger().withIdentity("pdfDeletionTrigger", "grupo")
-				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 1 ? * SAT")).build();
-
-		scheduler.scheduleJob(job, trigger);
-
-		// Job e Trigger de envio 
-                job = JobBuilder.newJob(SendDailyCardapio.class)
-                                                .withIdentity("sendDailyJob1", "grupo")
-                                                .build();
-                
-                trigger = TriggerBuilder.newTrigger()
-                                                .withIdentity("dailyMenuTrigger", "grupo")
-                                                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * MON-FRI"))
-                                                .build();
-
-                scheduler.scheduleJob(job, trigger);
-                
-                job = JobBuilder.newJob(SendDailyCardapio.class)
-                        .withIdentity("sendDailyJob2", "grupo")
-                        .build();
-
-                trigger = TriggerBuilder.newTrigger()
-                        .withIdentity("dailyMenuTrigger2", "grupo")
-                        .withSchedule(CronScheduleBuilder.cronSchedule("0 0 14 ? * MON-FRI"))
-                        .build();
-
-                scheduler.scheduleJob(job, trigger);
-                
-                // agendar e iniciar
-		scheduler.start();
-		Thread.sleep(300L * 1000L);
-		scheduler.shutdown(true);
+        // Jobs e Triggers de envio
+        JobDetail sendJob1 = JobBuilder.newJob(SendDailyCardapio.class)
+                .withIdentity("sendDailyJob1", "grupo")
+                .build();
+        Trigger sendTrigger1 = TriggerBuilder.newTrigger()
+                .withIdentity("dailyMenuTrigger", "grupo")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 9 ? * MON-FRI"))
+                .build();
+        scheduler.scheduleJob(sendJob1, sendTrigger1);
+        
+        JobDetail sendJob2 = JobBuilder.newJob(SendDailyCardapio.class)
+                .withIdentity("sendDailyJob2", "grupo")
+                .build();
+        Trigger sendTrigger2 = TriggerBuilder.newTrigger()
+                .withIdentity("dailyMenuTrigger2", "grupo")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 14 ? * MON-FRI"))
+                .build();
+        scheduler.scheduleJob(sendJob2, sendTrigger2);
+        
+        // Apenas inicia o scheduler
+        scheduler.start();
     }
 }
