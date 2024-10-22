@@ -89,7 +89,7 @@ public class Comandos {
 			
 			return cabecalho + "\n🌑 Jantar\n\n" + CardapioFormatter.editarCardapio(refeicao.toString()) + 
 					"\n\n* Contém leite/lactose/glúten\n" + 
-					"(❗ O CARDAPIO DO JANTAR É DISPONIVEL ÀS 14:00 HORAS)";
+					"(❗O CARDAPIO DO JANTAR FICA DISPONIVEL ÀS 14:00 HORAS)";
 		}
 		
 		for(StringBuilder stringBuilder : PdfExtractor.almocoDoDia) {
@@ -105,6 +105,6 @@ public class Comandos {
 		
 		return cabecalho + "\n☀️ Almoço\n\n" + CardapioFormatter.editarCardapio(refeicao.toString()) + 
 				"\n\n* Contém leite/lactose/glúten\n" +
-				"(❗ O CARDAPIO DO JANTAR FICA DISPONIVEL ÀS 14:00 HORAS)";		
+				"(❗O CARDAPIO DO JANTAR FICA DISPONIVEL ÀS 14:00 HORAS)";		
 	}
 }
