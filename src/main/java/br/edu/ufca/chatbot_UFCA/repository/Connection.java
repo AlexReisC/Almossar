@@ -34,11 +34,16 @@ public class Connection {
 		try (java.sql.Connection conn = createConnection()) {
 			Statement stmt = conn.createStatement();
 			ResultSet rset = stmt.executeQuery(sql);
-			return rset.next();
+			while(rset.next()) {
+				logger.info("Verifica se {} corresponde ao usuario", rset.getLong(1));
+				if(rset.getLong(1) == chatId) {
+					return true;
+				}
+			}
 		} catch (SQLException e) {
 			logger.error("Erro de acesso ao BD, {}", e.getMessage(), e);
-			return false;
 		}
+		return false;
 	}
 	
 	public static void salvarUsuario(Long chatId) {
@@ -48,11 +53,11 @@ public class Connection {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.setLong(1, chatId);
 				stmt.executeUpdate();
+				logger.info("Usuario {} salvo", chatId);
 			} catch (SQLException e) {
 				logger.error("Erro de acesso ao BD, {}", e.getMessage(), e);
 				return;
 			}
-			logger.info("Usuario {} salvo", chatId);
 		} else {
 			logger.info("Usuario {} nao salvo, pois ja existe no BD.", chatId);
 		}
