@@ -30,33 +30,32 @@ public class Connection {
 	}
 	
 	public static boolean usuarioSalvo(Long chatId) {
-		String sql = "SELECT '%d' FROM cardapio_bot.usuario;".formatted(chatId.longValue());
-		try (java.sql.Connection conn = createConnection()) {
-			Statement stmt = conn.createStatement();
+		String sql = "SELECT chatid FROM cardapio_bot.usuario WHERE chatid = ?;";
+		try (java.sql.Connection conn = createConnection();
+			PreparedStatement stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setLong(1, chatId);
 			ResultSet rset = stmt.executeQuery(sql);
-			while(rset.next()) {
-				logger.info("Verifica se {} corresponde ao usuario", rset.getLong(1));
-				if(rset.getLong(1) == chatId) {
-					return true;
-				}
-			}
+			return rset.next();
+			
 		} catch (SQLException e) {
 			logger.error("Erro de acesso ao BD, {}", e.getMessage(), e);
+			return false;
 		}
-		return false;
 	}
 	
 	public static void salvarUsuario(Long chatId) {
 		if(!usuarioSalvo(chatId)) {
-			String sql = "INSERT INTO cardapio_bot.usuario (chatId) VALUES (?);";
-			try (java.sql.Connection conn = createConnection()) {
-				PreparedStatement stmt = conn.prepareStatement(sql);
+			String sql = "INSERT INTO cardapio_bot.usuario (chatid) VALUES (?);";
+			try (java.sql.Connection conn = createConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql)) {
+			
 				stmt.setLong(1, chatId);
 				stmt.executeUpdate();
 				logger.info("Usuario {} salvo", chatId);
+				
 			} catch (SQLException e) {
 				logger.error("Erro de acesso ao BD, {}", e.getMessage(), e);
-				return;
 			}
 		} else {
 			logger.info("Usuario {} nao salvo, pois ja existe no BD.", chatId);
@@ -68,11 +67,13 @@ public class Connection {
 		
 		List<Long> idUsuarios = new ArrayList<>();
 		
-		try (java.sql.Connection connection = createConnection()) {
-			Statement stmt = connection.createStatement();
+		try (java.sql.Connection connection = createConnection();
+			Statement stmt = connection.createStatement()) {
+			
 			ResultSet result = stmt.executeQuery(sql);
+			
 			while(result.next()) {
-				long chatId = result.getBigDecimal("chatId").longValue();
+				long chatId = result.getBigDecimal(1).longValue();
 				idUsuarios.add(chatId);
 			}
 		} catch (SQLException e) {
