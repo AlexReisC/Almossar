@@ -35,7 +35,7 @@ public class Connection {
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
 			stmt.setLong(1, chatId);
-			ResultSet rset = stmt.executeQuery(sql);
+			ResultSet rset = stmt.executeQuery();
 			return rset.next();
 			
 		} catch (SQLException e) {
