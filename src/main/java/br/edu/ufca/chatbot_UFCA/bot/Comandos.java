@@ -84,7 +84,7 @@ public class Comandos {
 			
 			int vazio = refeicao.compareTo(PdfExtractor.stringBuilderVazio);
 			if(vazio == 0) {
-				return "Sem cardápio para o almoço :(";
+				return "Sem cardápio para o jantar :(";
 			}
 			
 			return cabecalho + "\n🌑 Jantar\n\n" + CardapioFormatter.editarCardapio(refeicao.toString()) + 
@@ -98,9 +98,9 @@ public class Comandos {
 			}
 		}
 		
-		int vazio = refeicao.compareTo(PdfExtractor.stringBuilderVazio);
-		if(vazio == 0) {
-			return "Sem cardápio para o jantar :(";
+		String stringBuilderReplaced = PdfExtractor.stringBuilderVazio.toString().replace("Sopas: \n", "");
+		if(refeicao.toString().compareTo(stringBuilderReplaced) == 0) {
+			return "Sem cardapio para o almoço :(";
 		}
 		
 		return cabecalho + "\n☀️ Almoço\n\n" + CardapioFormatter.editarCardapio(refeicao.toString()) + 

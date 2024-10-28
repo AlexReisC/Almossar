@@ -25,7 +25,7 @@ public class JobScheduler {
                 .build();
         Trigger downloadTrigger = TriggerBuilder.newTrigger()
                 .withIdentity("pdfDownloadTrigger", "grupo")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0 0/15 8-11 ? * MON-TUE"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0/15 8-10 ? * MON-TUE"))
                 .build();
         scheduler.scheduleJob(downloadJob, downloadTrigger);
         

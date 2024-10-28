@@ -2,6 +2,8 @@ package br.edu.ufca.chatbot_UFCA.bot;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +16,7 @@ import br.edu.ufca.chatbot_UFCA.utils.CheckPdf;
 
 
 public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
+	private static final Logger logger = LogManager.getLogger(CardapioBot.class);
 	private TelegramClient telegramClient;
 	
 	public CardapioBot(String botToken) {
@@ -51,7 +54,7 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 		List<Long> usuarios = Connection.obterUsuarios();
         
         if(!CheckPdf.pdfExiste()) {
-        	System.out.println("Envio programado nao feito, pois PDF nao existe!");
+        	logger.info("Envio programado nao feito, pois PDF nao existe!");
         	return;
         }
         
@@ -66,7 +69,7 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 			try {
 				telegramClient.execute(mensagem);
 			} catch (TelegramApiException e) {
-				e.printStackTrace();
+				logger.error("Erro no envio automatico, exception na TelegramApi: {}", e.getMessage(), e);
 			}
 		}
 	}

@@ -102,7 +102,7 @@ public class PdfExtractor {
 				
 				switch (ultimoTipoPrato) {
 	                case "principal":
-	                	if(prato.contains("/")) {
+	                	if(prato.contains("/") || prato.equalsIgnoreCase("DOCE")) {
 	                		continue;
 	                	}
 	                    refeicoesDia[0].append("- " + prato).append("\n");

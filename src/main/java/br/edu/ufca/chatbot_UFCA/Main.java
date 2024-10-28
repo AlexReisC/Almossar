@@ -10,6 +10,7 @@ import br.edu.ufca.chatbot_UFCA.bot.CardapioBot;
 import br.edu.ufca.chatbot_UFCA.bot.Comandos;
 import br.edu.ufca.chatbot_UFCA.bot.SendDailyCardapio;
 import br.edu.ufca.chatbot_UFCA.downloader.PdfDownloader;
+import br.edu.ufca.chatbot_UFCA.extractor.PdfExtractor;
 import br.edu.ufca.chatbot_UFCA.scheduler.JobScheduler;
 
 public class Main 
