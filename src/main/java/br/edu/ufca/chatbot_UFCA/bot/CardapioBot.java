@@ -52,12 +52,14 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 	
 	public void enviarAutomaticamente() {
 		List<Long> usuarios = Connection.obterUsuarios();
-        
+        logger.info("Numero de usuarios salvos: {}", usuarios.size());
+		
         if(!CheckPdf.pdfExiste()) {
         	logger.info("Envio programado nao feito, pois PDF nao existe!");
         	return;
         }
         
+		int envios = 0;
         String cardapio = Comandos.obterCardapio(); 
 		for (Long chatId : usuarios) {
 			SendMessage mensagem = SendMessage
@@ -69,9 +71,10 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 			try {
 				telegramClient.execute(mensagem);
 			} catch (TelegramApiException e) {
-				logger.error("Erro no envio automatico, exception na TelegramApi: {}", e.getMessage(), e);
+				logger.error("Erro no envio automatico: {}", e.getMessage());
 			}
 		}
+		logger.info("Total de envios: {}", envios);
 	}
 }
 
