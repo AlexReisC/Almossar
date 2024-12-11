@@ -27,13 +27,7 @@ jobs:
         VM_HOST: ${{ secrets.VM_HOST }}
         VM_USER: ${{ secrets.VM_USERNAME }}
         SERVICE_NAME: cardapio-bot
-      run: |
-        # Install SSH key
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H $VM_HOST >> ~/.ssh/known_hosts
-        
+      run: |        
         # Stop service
         ssh $VM_USER@$VM_HOST "sudo systemctl stop $SERVICE_NAME"
         
