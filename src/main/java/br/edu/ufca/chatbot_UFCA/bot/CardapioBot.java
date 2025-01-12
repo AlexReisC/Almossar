@@ -55,7 +55,7 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
         logger.info("Numero de usuarios salvos: {}", usuarios.size());
 		
         if(!CheckPdf.pdfExiste()) {
-        	logger.info("Envio programado nao feito, pois PDF nao existe!");
+        	logger.info("Envio programado nao feito, pois PDF foi nao encontrado!");
         	return;
         }
         

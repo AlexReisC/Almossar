@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 
 public class PdfDownloader implements Job {
 	private static final Logger logger = LogManager.getLogger(PdfDownloader.class);
@@ -32,6 +33,22 @@ public class PdfDownloader implements Job {
 		long bytes = 0;
 		try {
 			doc = Jsoup.connect(UFCA_SITE).get();
+			
+			String semanaAtual = doc.select("div.title").last().lastChild().toString();
+			logger.info(semanaAtual);
+
+			int indice = semanaAtual.indexOf("o");
+			Integer inicioSemana = Integer.valueOf(semanaAtual.substring(indice+2,indice+4));
+			Integer fimSemana = Integer.valueOf(semanaAtual.substring(indice+15,indice+17));
+			logger.info("Inicio {} e Fim {}", inicioSemana, fimSemana);
+			
+			int diaDoMes = LocalDate.now().getDayOfMonth();
+			logger.info(diaDoMes);
+			if(!(diaDoMes >= inicioSemana.intValue() && diaDoMes <= fimSemana.intValue())){
+				logger.info("Cardapio desta semana ainda nao postado!");
+				return;
+			}
+
 			Element pdfLink = doc.select("a.ui.teal.button").last();
 			if(pdfLink == null) {
 				logger.error("Link do PDF nao encontrado na pagina");
