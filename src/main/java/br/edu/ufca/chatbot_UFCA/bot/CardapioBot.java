@@ -51,16 +51,21 @@ public class CardapioBot implements LongPollingSingleThreadUpdateConsumer {
 	}
 	
 	public void enviarAutomaticamente() {
-		List<Long> usuarios = Connection.obterUsuarios();
-        logger.info("Numero de usuarios salvos: {}", usuarios.size());
-		
-        if(!CheckPdf.pdfExiste()) {
-        	logger.info("Envio programado nao feito, pois PDF foi nao encontrado!");
+		if(!CheckPdf.pdfExiste()) {
+			logger.info("Envio programado nao feito, pois PDF foi nao encontrado!");
         	return;
         }
-        
+		
+        String cardapio = Comandos.obterCardapio();
+		if(cardapio.equals("Sem cardápio para o almoço :(") || cardapio.equals("Sem cardápio para o jnatra :(")) {
+			logger.info("Envio programado nao feito, pois nao ha cardapio para este horario!");
+			return;
+		}
+
+		List<Long> usuarios = Connection.obterUsuarios();
+		logger.info("Numero de usuarios salvos: {}", usuarios.size());
+		
 		int envios = 0;
-        String cardapio = Comandos.obterCardapio(); 
 		for (Long chatId : usuarios) {
 			SendMessage mensagem = SendMessage
 					.builder()
