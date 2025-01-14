@@ -2,7 +2,6 @@ package br.edu.ufca.chatbot_UFCA.downloader;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,7 +29,6 @@ public class PdfDownloader implements Job {
 	public void baixarPdf(){
 		logger.info("Iniciando download do PDF");
 		Document doc;
-		long bytes = 0;
 		try {
 			doc = Jsoup.connect(UFCA_SITE).get();
 			
@@ -40,37 +38,33 @@ public class PdfDownloader implements Job {
 			int indice = semanaAtual.indexOf("o");
 			Integer inicioSemana = Integer.valueOf(semanaAtual.substring(indice+2,indice+4));
 			Integer fimSemana = Integer.valueOf(semanaAtual.substring(indice+15,indice+17));
-			logger.info("Inicio {} e Fim {}", inicioSemana, fimSemana);
+			logger.info("Semana atual: Inicio {} e Fim {}", inicioSemana, fimSemana);
 			
 			int diaDoMes = LocalDate.now().getDayOfMonth();
-			logger.info(diaDoMes);
 			if(!(diaDoMes >= inicioSemana.intValue() && diaDoMes <= fimSemana.intValue())){
 				logger.info("Cardapio desta semana ainda nao postado!");
 				return;
 			}
 
-			Element pdfLink = doc.select("a.ui.teal.button").last();
-			if(pdfLink == null) {
-				logger.error("Link do PDF nao encontrado na pagina");
+			Element botaoDownload = doc.select("a.ui.teal.button").last();
+			if(botaoDownload == null) {
+				logger.error("URL do PDF nao encontrado na pagina");
 				return;
 			}
-			
-			String pdfUrl = pdfLink.attr("href");
-			logger.info("URL original do PDF: {}", pdfUrl);
+
+			String urlOriginal = botaoDownload.attr("href");
+			logger.info("URL original do PDF: {}", urlOriginal);
 	        
-			URI uri = new URI(pdfUrl);
-			URL url = uri.toURL();
-			try (InputStream in = url.openStream()){
-				bytes = Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
+			URI uri = new URI(urlOriginal);
+			URL urlFinal = uri.toURL();
+			try (InputStream in = urlFinal.openStream()){
+				long bytes = Files.copy(in, Paths.get(NOME_ARQUIVO), StandardCopyOption.REPLACE_EXISTING);
+				logger.info("PDF baixado com sucesso! Tamanho: {} bytes", bytes);
 			}
 		} catch (IOException e) {
 			logger.error("Erro ao acessar ou baixar o arquivo PDF: {}", e.getMessage(), e);
 		} catch (URISyntaxException e) {
 			logger.error("Erro na URI: {}", e.getMessage(), e);
-		}
-		
-		if(bytes != 0) {
-			logger.info("PDF baixado com sucesso! Tamanho: {} bytes", bytes);
 		}
 	}
 
