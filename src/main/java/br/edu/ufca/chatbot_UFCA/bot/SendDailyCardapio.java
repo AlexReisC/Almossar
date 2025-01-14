@@ -5,7 +5,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class SendDailyCardapio implements Job {
-	 private static CardapioBot bot;
+	private static CardapioBot bot;
 	    
     public static void setBot(CardapioBot cardapioBot) {
         bot = cardapioBot;

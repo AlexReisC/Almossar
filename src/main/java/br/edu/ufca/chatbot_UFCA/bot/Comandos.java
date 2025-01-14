@@ -51,7 +51,7 @@ public class Comandos {
 		}
 	}
 	
-	public static String obterCardapio(){
+	protected static String obterCardapio(){
 		LocalDate hoje = LocalDate.now();
 		int dia = hoje.getDayOfWeek().getValue();
 		if(dia > 5) {
